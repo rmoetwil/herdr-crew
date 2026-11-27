@@ -41,14 +41,13 @@ The model must support tool calling. Smaller local models may not pick the skill
 
 ### Antigravity CLI
 
-Clone the repository and install it as a plugin. Antigravity converts the Claude Code plugin and copies it to `~/.gemini/config/plugins/herdr-crew`:
+Install it as a plugin, straight from GitHub. Antigravity clones the repository, converts the Claude Code plugin and installs it in `~/.gemini/config/plugins/herdr-crew`:
 
 ```sh
-git clone https://github.com/rmoetwil/herdr-crew.git ~/code/herdr-crew
-agy plugin install ~/code/herdr-crew
+agy plugin install https://github.com/rmoetwil/herdr-crew
 ```
 
-To update, run `git pull` in the clone and the same `agy plugin install` again: it replaces the installed copy. `agy plugin list` shows the installed version. `agy plugin install` takes a local folder, not a GitHub URL.
+To update, run the same command again: it replaces the installed copy. `agy plugin list` shows the installed version. Use the full `https://` URL; the short form `github:rmoetwil/herdr-crew` is not accepted. A branch installs with `https://github.com/rmoetwil/herdr-crew/tree/<branch>`, and a local clone with `agy plugin install <folder>`.
 
 Without the plugin system, copy the skill folder instead, into `~/.gemini/config/skills/`, into `~/.agents/skills/` (which OpenCode reads too), or into a project's `.agents/skills/`. Copy it: a symbolic link did not load in a project's `.agents/skills/` when tested.
 
