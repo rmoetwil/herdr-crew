@@ -1,11 +1,13 @@
 ---
 name: herdr-crew
-description: Arrange the Herdr desktop app (herdr-app) from the command line. Use when asked to open, split, arrange, save, reopen or close Herdr spaces, tabs, panes or terminals, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup".
+description: Arrange the Herdr desktop app (herdr-app) from the command line. Use when asked to open, split, arrange, save, reopen or close Herdr spaces, tabs, panes or terminals, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup". Also use for a plain request to open a program, shell, terminal, tab or pane while this session runs inside Herdr (`HC_TERMINAL_ID` is set), even when Herdr is not named, such as "open opencode in a terminal".
 ---
 
 # Herdr crew
 
 Herdr is the terminal app this session may be running in. `herdr-app` changes what the window shows; `hc` runs, reads and talks to the terminals behind it. `scripts/herd.py` in this skill's folder does the multi-step jobs below; it prints JSON, and on failure `{"error": ...}` with exit code 1.
+
+When `HC_TERMINAL_ID` is set, this session runs inside Herdr: open every requested terminal, tab or pane in Herdr, never in a separate terminal application.
 
 ## Steps
 
@@ -15,6 +17,9 @@ Herdr is the terminal app this session may be running in. `herdr-app` changes wh
 
    | Job | Command |
    | --- | --- |
+   | One program in a new tab | `herdr-app do terminal.open --argv '["opencode"]' --folder DIR --place tab --name OpenCode` (leave out `--argv` for a plain shell) |
+   | One program in a split pane | the same with `--place right` or `--place down`, beside the focused pane |
+   | Close one pane | `herdr-app do pane.close --pane ID` (see Gotchas: this stops its program) |
    | Grid of terminals | `herd.py grid --rows 2 --cols 2 --name review [--folder DIR] [--argv '["claude"]']` |
    | A different program per pane | `herd.py grid --rows 2 --cols 2 --name crew --programs '["claude", "claude", "agy", "opencode"]'` |
    | One agent per task, each on its own branch | `herd.py grid --name fix-auth --folder REPO --tasks FILE --worktrees [--base main]` |
@@ -44,7 +49,8 @@ Saved in `~/.config/herdr-crew/setups/NAME.json`: each space's name, machine and
 
 ## Gotchas
 
-- Herdr runs every `argv` inside a login shell (`zsh -lic '"$@"; exec "$0" -li'`), so a pane returns to a shell when its program exits.
+- Herdr runs every `argv` inside a login shell (`zsh -lic '"$@"; exec "$0" -li'`), so a pane returns to a shell when its program exits. "Open X in a shell" therefore needs no extra step: start X with `--argv` as usual, without typing it into a plain shell.
+- `pane.close` stops the pane's program: its terminal ends as `finished`, not parked. Unlike `herd.py close`, it does not check for unfinished work, so check `hc get <terminal>` first when the pane runs something you did not start.
 - `pane.resize` works only on the shown tab, and moves the border on the named side outward: grow a pane with `right`/`down`, shrink it by growing its neighbour `left`/`up`.
 - `hc get` lacks `foreground` for some programs (macOS hides `top`'s); fall back to its `argv`.
 - Leave the user's other tabs alone; close only what you opened.
