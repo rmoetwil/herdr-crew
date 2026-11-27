@@ -2,7 +2,8 @@
 """Arrange Herdr from the command line: grids, saved setups and cleanup.
 
   herd.py grid   [--rows R --cols C] [--name N] [--folder DIR]
-                 [--space ID | --machine M] [--argv JSON] [--tasks FILE]
+                 [--space ID | --machine M] [--argv JSON | --programs JSON]
+                 [--tasks FILE]
                  [--worktrees [--base REF] [--branch-prefix P]] [--focus false]
   herd.py save   NAME [--space ID ...] [--all]
   herd.py open   NAME
@@ -206,25 +207,46 @@ def slug(text):
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "grid"
 
 
+def parse_programs(text):
+    """--programs: a JSON list with one entry per pane, in grid order. An
+    entry is a command name ("opencode"), a list with arguments
+    (["claude", "--model", "opus"]) or null for a plain shell."""
+    try:
+        items = json.loads(text)
+    except json.JSONDecodeError as e:
+        raise Fail(f"--programs is not JSON: {e}")
+    ok = lambda p: p is None or (isinstance(p, str) and p) or \
+        (isinstance(p, list) and p and all(isinstance(x, str) for x in p))
+    if not isinstance(items, list) or not items or not all(ok(p) for p in items):
+        raise Fail('--programs needs a JSON list like ["claude", "opencode", ["agy"], null]')
+    return [[p] if isinstance(p, str) else p for p in items]
+
+
 def cmd_grid(a):
     tasks = []
     if a.tasks:
         lines = Path(a.tasks).read_text().splitlines()
         tasks = [l.strip() for l in lines if l.strip() and not l.lstrip().startswith("#")]
+    programs = parse_programs(a.programs) if a.programs else None
+    if programs and tasks and len(programs) != len(tasks):
+        raise Fail(f"{len(programs)} programs for {len(tasks)} tasks: give one program per task")
     argv = json.loads(a.argv) if a.argv else (["claude"] if tasks or a.worktrees else None)
-    n = len(tasks) or (a.rows or 2) * (a.cols or 2)
+    n = len(tasks) or len(programs or []) or (a.rows or 2) * (a.cols or 2)
     rows, cols = shape(n, a.rows, a.cols)
-    n = min(n, rows * cols) if not tasks else n
-    if tasks and len(tasks) > rows * cols:
-        raise Fail(f"{len(tasks)} tasks do not fit {rows}x{cols}")
+    if (tasks or programs) and n > rows * cols:
+        raise Fail(f"{n} panes do not fit {rows}x{cols}")
+    n = min(n, rows * cols)
 
     # Without --space or --machine, Herdr puts the tab in the shown space.
     space = find_space(a.space or status()["space"]) if not a.machine else None
     machine = a.machine or space["machine"]
     folder = a.folder or (space["folder"] if space and machine else None) or \
         (os.getcwd() if not machine else None)
-    cells = [{"folder": folder, "argv": (argv + [tasks[i]]) if argv and i < len(tasks) else argv}
-             for i in range(n)]
+    def pane_argv(i):
+        prog = programs[i] if programs else argv
+        return prog + [tasks[i]] if prog and i < len(tasks) else prog
+
+    cells = [{"folder": folder, "argv": pane_argv(i)} for i in range(n)]
 
     made = []
     if a.worktrees:
@@ -424,7 +446,8 @@ def main():
     g.add_argument("--folder")
     g.add_argument("--space")
     g.add_argument("--machine", help="make a new space on this machine (hc machine ls)")
-    g.add_argument("--argv", help='JSON list, e.g. \'["claude"]\'')
+    g.add_argument("--argv", help='one program for every pane, as a JSON list, e.g. \'["claude"]\'')
+    g.add_argument("--programs", help='a program per pane in grid order, e.g. \'["claude", "opencode", null]\'')
     g.add_argument("--tasks", help="file with one task per line; each pane gets the next")
     g.add_argument("--worktrees", action="store_true", help="a git worktree and branch per pane")
     g.add_argument("--base", help="commit the worktree branches start from (default HEAD)")
@@ -455,6 +478,8 @@ def main():
         p.error("close needs exactly one of --tab or --space")
     if a.cmd == "grid" and a.machine and a.space:
         p.error("give --space or --machine, not both")
+    if a.cmd == "grid" and a.argv and a.programs:
+        p.error("give --argv or --programs, not both")
     try:
         {"grid": cmd_grid, "save": cmd_save, "open": cmd_open,
          "list": cmd_list, "close": cmd_close, "even": cmd_even}[a.cmd](a)
