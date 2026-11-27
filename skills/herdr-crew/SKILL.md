@@ -1,11 +1,11 @@
 ---
 name: herdr-crew
-description: Arrange the Herdr desktop app (herdr-app) from the command line. Use when asked to open, split, arrange, save, reopen or close Herdr spaces, tabs, panes or terminals, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup". Also use for a plain request to open a program, shell, terminal, tab or pane while this session runs inside Herdr (`HC_TERMINAL_ID` is set), even when Herdr is not named, such as "open opencode in a terminal".
+description: Arrange the Herdr desktop app (herdr-app) from the command line. Use when asked to open, split, arrange, save, list, reopen or close Herdr spaces, tabs, panes, terminals or saved setups, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup". Also use for a plain request to open a program, shell, terminal, tab or pane while this session runs inside Herdr (`HC_TERMINAL_ID` is set), even when Herdr is not named, such as "open opencode in a terminal".
 ---
 
 # Herdr crew
 
-Herdr is the terminal app this session may be running in. `herdr-app` changes what the window shows; `hc` runs, reads and talks to the terminals behind it. `scripts/herd.py` in this skill's folder does the multi-step jobs below; it prints JSON, and on failure `{"error": ...}` with exit code 1.
+Herdr is the terminal app this session may be running in. `herdr-app` changes what the window shows; `hc` runs, reads and talks to the terminals behind it. `scripts/herd.py` in this skill's folder does the multi-step jobs below; it prints JSON, and on failure `{"error": ...}` with exit code 1. It is not on the `PATH`: `herd.py` below is short for `python3 <this skill's folder>/scripts/herd.py`, with the folder that holds this `SKILL.md`.
 
 When `HC_TERMINAL_ID` is set, this session runs inside Herdr: open every requested terminal, tab or pane in Herdr, never in a separate terminal application.
 
@@ -29,7 +29,7 @@ When `HC_TERMINAL_ID` is set, this session runs inside Herdr: open every request
    | Even out a grid later | `herd.py even --tab ID` |
    | Close a tab or space | `herd.py close --tab ID` or `--space ID`, plus `--remove-worktrees` for worktree grids |
 
-4. Done when `herdr-app ls` shows the expected tabs and panes and `herdr-app shot <temp dir>/herdr.png` looks right. Look at the picture before reporting.
+4. Done when `herdr-app ls` shows the expected tabs and panes and `herdr-app shot <temp dir>/herdr.png` looks right. Look at the picture before reporting; if you cannot view images, check the `herdr-app ls` output instead and say the screenshot was not checked.
 
 ## Grids
 
