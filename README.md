@@ -1,6 +1,6 @@
 # herdr-crew
 
-A Claude Code skill for running a crew of agents in the [Herdr](https://herdr.dev) desktop app. Herdr already lets an agent split panes and open tabs one command at a time; this skill adds the jobs that take several steps to get right:
+A skill for Claude Code and OpenCode for running a crew of agents in the [Herdr](https://herdr.dev) desktop app. Herdr already lets an agent split panes and open tabs one command at a time; this skill adds the jobs that take several steps to get right:
 
 - **Even grids.** Herdr's split always halves a pane, so three columns come out 50/25/25. `grid` builds any rows × columns layout and drags the borders until the panes are the same size.
 - **One agent per task, each in its own worktree.** Give it a file with one task per line. Each pane gets its own git branch and checkout, and starts `claude` (or any agent) with its task as the first message, so parallel agents never edit the same files.
@@ -9,13 +9,14 @@ A Claude Code skill for running a crew of agents in the [Herdr](https://herdr.de
 - **Saved setups.** Save your spaces, tabs, folders and programs under a name, and open them again in one step.
 - **Safe cleanup.** `close` refuses while an agent is working, an editor is open or a worktree has uncommitted changes. Removing worktrees always keeps their branches.
 
-You ask in your own words ("open a 2x2 grid with claude in each pane", "put these four issues in parallel worktrees"), and Claude runs the right command.
+You ask in your own words ("open a 2x2 grid with claude in each pane", "put these four issues in parallel worktrees"), and the agent runs the right command.
 
 This is an unofficial add-on; it is not made by the Herdr developers. Herdr ships its own official skill, [`herdr`](https://github.com/herdrdev/herdr/tree/master/skills/herdr), for the `herdr` terminal UI. This one has a different name so both can be installed side by side, and it drives the desktop app (`herdr-app`).
 
 ## Install
 
-In Claude Code:
+### Claude Code
+
 
 ```
 /plugin marketplace add rmoetwil/herdr-crew
@@ -23,6 +24,20 @@ In Claude Code:
 ```
 
 Or, without the plugin system, copy `skills/herdr-crew` to `~/.claude/skills/herdr-crew`. The skill folder follows the open Agent Skills format, so other agents that read `SKILL.md` files can use it too.
+
+### OpenCode
+
+OpenCode has no skill installer, so clone the repository and link the skill folder into OpenCode's global skills folder. A `git pull` then updates it:
+
+```sh
+git clone https://github.com/rmoetwil/herdr-crew.git ~/code/herdr-crew
+mkdir -p ~/.config/opencode/skills
+ln -s ~/code/herdr-crew/skills/herdr-crew ~/.config/opencode/skills/herdr-crew
+```
+
+For one project only, link it into that project's `.opencode/skills/` instead. OpenCode also reads `~/.claude/skills/`, so a copy installed there for Claude Code works in OpenCode too. A Claude Code plugin install does not, because it lives in Claude Code's plugin folder.
+
+The model must support tool calling. Smaller local models may not pick the skill on their own; naming it in the request ("use the herdr-crew skill to ...") helps.
 
 ## Requirements
 
