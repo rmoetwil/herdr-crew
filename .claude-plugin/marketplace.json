@@ -1,0 +1,17 @@
+{
+  "name": "herdr-skill",
+  "owner": {
+    "name": "Ronald Moetwil",
+    "url": "https://github.com/rmoetwil"
+  },
+  "description": "The herdr skill as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "herdr",
+      "source": "./",
+      "description": "Drive the Herdr terminal app from Claude Code: grids, worktrees per agent, remote machines, saved setups and safe cleanup.",
+      "category": "productivity",
+      "keywords": ["herdr", "terminal", "panes", "worktrees"]
+    }
+  ]
+}
