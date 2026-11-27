@@ -41,15 +41,16 @@ The model must support tool calling. Smaller local models may not pick the skill
 
 ### Antigravity CLI
 
-Copy the skill folder into Antigravity's global skills folder. A symbolic link did not load in a project's `.agents/skills/` when tested, so copy the folder, and copy it again after each update:
+Clone the repository and install it as a plugin. Antigravity converts the Claude Code plugin and copies it to `~/.gemini/config/plugins/herdr-crew`:
 
 ```sh
 git clone https://github.com/rmoetwil/herdr-crew.git ~/code/herdr-crew
-mkdir -p ~/.gemini/config/skills
-cp -R ~/code/herdr-crew/skills/herdr-crew ~/.gemini/config/skills/
+agy plugin install ~/code/herdr-crew
 ```
 
-For one project only, copy it into that project's `.agents/skills/` instead. Antigravity also reads `~/.agents/skills/`, and so does OpenCode, so one copy there serves both.
+To update, run `git pull` in the clone and the same `agy plugin install` again: it replaces the installed copy. `agy plugin list` shows the installed version. `agy plugin install` takes a local folder, not a GitHub URL.
+
+Without the plugin system, copy the skill folder instead, into `~/.gemini/config/skills/`, into `~/.agents/skills/` (which OpenCode reads too), or into a project's `.agents/skills/`. Copy it: a symbolic link did not load in a project's `.agents/skills/` when tested.
 
 In print mode (`agy -p`), Antigravity cannot ask for permission, so allow the commands the skill runs, for example `agy --settings '{"permissions":{"allow":["command(python3)","command(herdr-app)"]}}' -p "..."`.
 
