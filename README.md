@@ -52,6 +52,10 @@ To update, run `git pull` in the clone and the same `agy plugin install` again: 
 
 Without the plugin system, copy the skill folder instead, into `~/.gemini/config/skills/`, into `~/.agents/skills/` (which OpenCode reads too), or into a project's `.agents/skills/`. Copy it: a symbolic link did not load in a project's `.agents/skills/` when tested.
 
+### More than one agent on the same computer
+
+Use one install per tool: the Claude Code plugin, a symlink in `~/.config/opencode/skills/` for OpenCode, and `agy plugin install` for Antigravity. Each tool then reads only its own copy. Do not combine the Antigravity plugin with a copy in `~/.agents/skills/`: Antigravity would find two skills named `herdr-crew`, and the copies can drift to different versions.
+
 In print mode (`agy -p`), Antigravity cannot ask for permission, so allow the commands the skill runs, for example `agy --settings '{"permissions":{"allow":["command(python3)","command(herdr-app)"]}}' -p "..."`.
 
 ## Requirements
