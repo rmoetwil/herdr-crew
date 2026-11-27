@@ -4,6 +4,7 @@ A Claude Code skill for running a crew of agents in the [Herdr](https://herdr.de
 
 - **Even grids.** Herdr's split always halves a pane, so three columns come out 50/25/25. `grid` builds any rows × columns layout and drags the borders until the panes are the same size.
 - **One agent per task, each in its own worktree.** Give it a file with one task per line. Each pane gets its own git branch and checkout, and starts `claude` (or any agent) with its task as the first message, so parallel agents never edit the same files.
+- **A different agent per pane.** `--programs '["claude", "claude", "agy", "opencode"]'` starts any mix of programs, one per pane.
 - **Remote machines.** Open a grid in a new space on any machine Herdr is connected to.
 - **Saved setups.** Save your spaces, tabs, folders and programs under a name, and open them again in one step.
 - **Safe cleanup.** `close` refuses while an agent is working, an editor is open or a worktree has uncommitted changes. Removing worktrees always keeps their branches.
@@ -34,6 +35,7 @@ Everything the skill does goes through one script, `skills/herdr-crew/scripts/he
 
 ```sh
 herd.py grid --rows 2 --cols 3 --name review --argv '["claude"]'
+herd.py grid --rows 2 --cols 2 --name crew --programs '["claude", "claude", "agy", "opencode"]'
 herd.py grid --name fix-auth --folder ~/code/app --tasks tasks.txt --worktrees --base main
 herd.py grid --machine my-server --cols 2 --name logs
 herd.py save work            # the shown space; --all for every space

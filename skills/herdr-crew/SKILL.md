@@ -16,6 +16,7 @@ Herdr is the terminal app this session may be running in. `herdr-app` changes wh
    | Job | Command |
    | --- | --- |
    | Grid of terminals | `herd.py grid --rows 2 --cols 2 --name review [--folder DIR] [--argv '["claude"]']` |
+   | A different program per pane | `herd.py grid --rows 2 --cols 2 --name crew --programs '["claude", "claude", "agy", "opencode"]'` |
    | One agent per task, each on its own branch | `herd.py grid --name fix-auth --folder REPO --tasks FILE --worktrees [--base main]` |
    | Grid on another machine | `herd.py grid --machine NAME --cols 2 --name remote` (`hc machine ls` lists machines) |
    | Save spaces as a setup | `herd.py save NAME [--space ID ...] [--all]` (default: the shown space) |
@@ -28,6 +29,7 @@ Herdr is the terminal app this session may be running in. `herdr-app` changes wh
 ## Grids
 
 - Without `--space` or `--machine`, the grid opens in the **shown** space, on that space's machine. `--focus false` puts the previously shown tab back afterwards.
+- `--programs`: one entry per pane in grid order (left to right, top to bottom). An entry is a command on the pane's PATH (`"opencode"`), a list with arguments (`["claude", "--model", "opus"]`) or `null` for a plain shell. It replaces `--argv`, and sizes the grid to its length unless `--rows`/`--cols` are given. With `--tasks`, give one program per task: each pane gets its program plus its task.
 - `--tasks FILE`: one task per line (`#` lines skipped). Each pane gets `argv` plus its task as the last argument, so `claude` starts with that first message. The grid sizes itself to the number of tasks unless `--rows`/`--cols` are given. `--argv` defaults to `["claude"]` with tasks or worktrees.
 - `--worktrees`: pane *n* gets branch `<prefix>-n` (prefix: `--branch-prefix`, default the `--name`) checked out at `~/.herdr/worktrees/<repo>/<branch>`, where Herdr's own New/Open/Remove worktree menu finds it. It works on this computer only, and stops before creating anything if a branch or folder already exists. Use it whenever two or more agents will edit the same repo.
 - `"even": false` in the output means the panes keep Herdr's halving split (three columns: 50/25/25). The window only sizes terminals while it is on screen, and never reports sizes for remote ones. Tell the user, and run `herd.py even --tab ID` once Herdr is in front.

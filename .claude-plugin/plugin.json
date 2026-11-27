@@ -1,6 +1,6 @@
 {
   "name": "herdr-crew",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Run a crew of agents in the Herdr desktop app from Claude Code: even grids of terminals, one agent per task in its own git worktree, remote machines, saved setups and safe cleanup.",
   "author": {
     "name": "Ronald Moetwil",
