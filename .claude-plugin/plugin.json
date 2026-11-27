@@ -1,13 +1,13 @@
 {
-  "name": "herdr",
+  "name": "herdr-crew",
   "version": "0.1.0",
-  "description": "Drive the Herdr terminal app from Claude Code: even grids of terminals, one agent per task in its own git worktree, remote machines, saved setups and safe cleanup.",
+  "description": "Run a crew of agents in the Herdr desktop app from Claude Code: even grids of terminals, one agent per task in its own git worktree, remote machines, saved setups and safe cleanup.",
   "author": {
     "name": "Ronald Moetwil",
     "url": "https://github.com/rmoetwil"
   },
-  "repository": "https://github.com/rmoetwil/herdr-skill",
+  "repository": "https://github.com/rmoetwil/herdr-crew",
   "license": "MIT",
   "keywords": ["herdr", "terminal", "panes", "worktrees", "agents"],
-  "skills": ["./skills/herdr"]
+  "skills": ["./skills/herdr-crew"]
 }

@@ -1,6 +1,6 @@
-# herdr-skill
+# herdr-crew
 
-A Claude Code skill for the [Herdr](https://herdr.dev) terminal app. Herdr already lets an agent split panes and open tabs one command at a time; this skill adds the jobs that take several steps to get right:
+A Claude Code skill for running a crew of agents in the [Herdr](https://herdr.dev) desktop app. Herdr already lets an agent split panes and open tabs one command at a time; this skill adds the jobs that take several steps to get right:
 
 - **Even grids.** Herdr's split always halves a pane, so three columns come out 50/25/25. `grid` builds any rows × columns layout and drags the borders until the panes are the same size.
 - **One agent per task, each in its own worktree.** Give it a file with one task per line. Each pane gets its own git branch and checkout, and starts `claude` (or any agent) with its task as the first message, so parallel agents never edit the same files.
@@ -10,18 +10,18 @@ A Claude Code skill for the [Herdr](https://herdr.dev) terminal app. Herdr alrea
 
 You ask in your own words ("open a 2x2 grid with claude in each pane", "put these four issues in parallel worktrees"), and Claude runs the right command.
 
-This is an unofficial add-on; it is not made by the Herdr developers.
+This is an unofficial add-on; it is not made by the Herdr developers. Herdr ships its own official skill, [`herdr`](https://github.com/herdrdev/herdr/tree/master/skills/herdr), for the `herdr` terminal UI. This one has a different name so both can be installed side by side, and it drives the desktop app (`herdr-app`).
 
 ## Install
 
 In Claude Code:
 
 ```
-/plugin marketplace add rmoetwil/herdr-skill
-/plugin install herdr@herdr-skill
+/plugin marketplace add rmoetwil/herdr-crew
+/plugin install herdr-crew@herdr-crew
 ```
 
-Or, without the plugin system, copy `skills/herdr` to `~/.claude/skills/herdr`. The skill folder follows the open Agent Skills format, so other agents that read `SKILL.md` files can use it too.
+Or, without the plugin system, copy `skills/herdr-crew` to `~/.claude/skills/herdr-crew`. The skill folder follows the open Agent Skills format, so other agents that read `SKILL.md` files can use it too.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ Or, without the plugin system, copy `skills/herdr` to `~/.claude/skills/herdr`. 
 
 ## Use the script directly
 
-Everything the skill does goes through one script, `skills/herdr/scripts/herd.py`, which prints JSON:
+Everything the skill does goes through one script, `skills/herdr-crew/scripts/herd.py`, which prints JSON:
 
 ```sh
 herd.py grid --rows 2 --cols 3 --name review --argv '["claude"]'
@@ -43,7 +43,7 @@ herd.py even --tab TAB_ID
 herd.py close --tab TAB_ID --remove-worktrees
 ```
 
-Setups are stored in `~/.config/herdr-skill/setups/`. They record folders and programs per tab, not the exact split shapes: `open` lays each tab out as an even grid. Agents restart fresh, not resumed.
+Setups are stored in `~/.config/herdr-crew/setups/`. They record folders and programs per tab, not the exact split shapes: `open` lays each tab out as an even grid. Agents restart fresh, not resumed.
 
 ## Known limits
 

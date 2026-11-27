@@ -23,7 +23,7 @@ import time
 from pathlib import Path
 
 # Outside the skill folder: a plugin's folder is replaced on every update.
-SETUPS = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "herdr-skill" / "setups"
+SETUPS = Path(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))) / "herdr-crew" / "setups"
 WORKTREES = Path(os.path.expanduser("~/.herdr/worktrees"))
 SHELLS = {"zsh", "bash", "sh", "fish", "dash", "ksh", "-zsh", "-bash"}
 

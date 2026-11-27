@@ -1,9 +1,9 @@
 ---
-name: herdr
-description: Arrange the Herdr terminal app from the command line. Use when asked to open, split, arrange, save, reopen or close Herdr spaces, tabs, panes or terminals, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup".
+name: herdr-crew
+description: Arrange the Herdr desktop app (herdr-app) from the command line. Use when asked to open, split, arrange, save, reopen or close Herdr spaces, tabs, panes or terminals, such as "a 2x2 grid with claude in each pane", "four agents on these tasks, each in its own worktree", "a pane on my server" or "save this setup".
 ---
 
-# Herdr
+# Herdr crew
 
 Herdr is the terminal app this session may be running in. `herdr-app` changes what the window shows; `hc` runs, reads and talks to the terminals behind it. `scripts/herd.py` in this skill's folder does the multi-step jobs below; it prints JSON, and on failure `{"error": ...}` with exit code 1.
 
@@ -34,7 +34,7 @@ Herdr is the terminal app this session may be running in. `herdr-app` changes wh
 
 ## Setups
 
-Saved in `~/.config/herdr-skill/setups/NAME.json`: each space's name, machine and tabs, and each terminal's folder and program. Agents are saved by name only (`claude`, `codex`), without session IDs; other programs keep their full command line. Split shapes are not saved: `open` lays each tab out as an even grid. It skips a space whose name and machine are already open.
+Saved in `~/.config/herdr-crew/setups/NAME.json`: each space's name, machine and tabs, and each terminal's folder and program. Agents are saved by name only (`claude`, `codex`), without session IDs; other programs keep their full command line. Split shapes are not saved: `open` lays each tab out as an even grid. It skips a space whose name and machine are already open.
 
 ## Closing
 
